@@ -4,7 +4,7 @@ import time
 import datetime
 
 bind_ip = "127.0.0.1"
-bind_port = 11234
+bind_port =11111 
 
 users = ["fred", "qqq", "aaa"]
 passwords = ["fred", "qqq", "aaa"]
@@ -24,8 +24,7 @@ server.bind((bind_ip,bind_port))
 
 server.listen(5)
 	
-print("[*] Listening on "+ bind_ip +":" + str(bind_port))
-	
+print("[*] Listening on "+ bind_ip +":" + str(bind_port))	
 def handle_client(client_socket,ipadd,portadd):
 		
 	#----- login -----#
@@ -104,7 +103,7 @@ def handle_client(client_socket,ipadd,portadd):
 			login_state[uid] = 0
 			break;
 		
-		elif re[0:4]=="send":
+		elif re[0:4]=="talk":
 			sendlock = 1
 			print(re[5:])
 			for i in range(len(users)):
@@ -124,35 +123,9 @@ def handle_client(client_socket,ipadd,portadd):
 		elif re[0:9]=="broadcast":
 			print(re[10:])
 			current = datetime.datetime.now()
-			bmessage = re[10:] + " from " + str(current)
+			bmessage = re[10:] + "  from " + str(current)
 			for i in range(len(users)):
 				towho[i] = -2
-				
-		elif re == "state":
-			while True:
-				content = "set your state (online , offline)>>"
-				co = content.encode('ascii')
-				client_socket.send(co)
-				
-				request = client_socket.recv(1024)
-				re = request .decode('ascii')
-				
-				if re == "online":
-					login_state[uid] = 1
-					content = "Your state is online now"
-					co = content.encode('ascii')
-					client_socket.send(co)
-					break;
-				elif re == "offline":
-					login_state[uid] = 0
-					content = "Your state is offline now"
-					co = content.encode('ascii')
-					client_socket.send(co)
-					break;
-				else:
-					content = "wrong comment!"
-					co = content.encode('ascii')
-					client_socket.send(co)
 		else:
 			content = "wrong comment!"
 			co = content.encode('ascii')
